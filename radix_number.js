@@ -29,13 +29,70 @@
         return result;
     }
     
-    function RadixNumber(str, radix) {
+    function RadixNumber(n, radix) {
         this.radix_ = radix;
-        this.digits_ = parseStringWithRadix(str, radix);
+        
+        if (n instanceof Array) {
+            this.digits_ = n;
+        } else if (typeof n === "string" || n instanceof String) {
+            this.digits_ = parseStringWithRadix(n, radix);
+        } else {
+            this.digits_ = [];
+        }
     }
 
     RadixNumber.prototype = {
         constructor: RadixNumber,
+        
+        length: function() {
+            return this.digits_.length;
+        },
+
+        add: function(other) {
+            var digits = [];
+            
+            var myLength = this.length();
+            var otherLength = other.length();
+            var carry = 0;
+            
+            for (var i = 0, length = Math.max(myLength, otherLength); i < length; i++) {
+                var a = (i < myLength) ? this.digitAt(i) : 0;
+                var b = (i < otherLength) ? other.digitAt(i) : 0;
+                var c = a + b + carry;
+
+                if (c >= this.radix_) {
+                    carry = 1;
+                    c = c - this.radix_;
+                } else {
+                    carry = 0;
+                }
+
+                digits.push(c);
+            }
+            
+            if (carry > 0) {
+                digits.push(carry);
+            }
+            
+            return new RadixNumber(digits, this.radix_);
+        },
+        
+        subtract: function(x) {
+            // TODO
+            var result = [];
+            return result;
+        },
+        
+        decompose: function(n) {
+            // TODO
+            var upper = [];
+            var lower = [];
+            return [upper, lower];
+        },
+        
+        digitAt: function(index) {
+            return this.digits_[index];
+        },
         
         toString: function() {
             return this.digits_.reverse().join('');
