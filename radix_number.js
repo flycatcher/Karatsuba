@@ -77,10 +77,26 @@
             return new RadixNumber(digits, this.radix_);
         },
         
-        subtract: function(x) {
-            // TODO
-            var result = [];
-            return result;
+        subtract: function(other) {
+            var digits = this.digits_.slice();
+            var i, length;
+            
+            for (i = 0, length = other.length(); i < length; i++) {
+                digits[i] -= other.digitAt(i);
+            }
+            
+            for (i = 0, length = digits.length - 1; i < length; i++) {
+                if (digits[i] < 0) {
+                    digits[i] += this.radix_;
+                    digits[i + 1] -= 1;
+                }
+            }
+            
+            while (digits[digits.length - 1] == 0) {
+                digits.pop();
+            } 
+            
+            return new RadixNumber(digits, this.radix_);
         },
         
         decompose: function(n) {
