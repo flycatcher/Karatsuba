@@ -92,9 +92,13 @@
                 }
             }
             
-            while (digits[digits.length - 1] == 0) {
-                digits.pop();
-            } 
+            i = digits.length;
+            
+            while (i > 0 && digits[i - 1] == 0) {
+                i--;
+            }
+            
+            digits = digits.slice(0, i);
             
             return new RadixNumber(digits, this.radix_);
         },
