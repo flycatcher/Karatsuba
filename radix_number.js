@@ -104,12 +104,11 @@
         },
         
         decompose: function(n) {
-            // TODO
-            var upper = [];
-            var lower = [];
+            var upper = new RadixNumber(this.digits_.slice(n), this.radix_);
+            var lower = new RadixNumber(this.digits_.slice(0, n), this.radix_);
             return [upper, lower];
         },
-        
+
         digitAt: function(index) {
             return this.digits_[index];
         },
