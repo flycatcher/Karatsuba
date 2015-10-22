@@ -104,9 +104,17 @@
         },
         
         decompose: function(n) {
-            var upper = new RadixNumber(this.digits_.slice(n), this.radix_);
-            var lower = new RadixNumber(this.digits_.slice(0, n), this.radix_);
-            return [upper, lower];
+            var lower, upper;
+            
+            if (n >= this.length()) {
+                lower = this;
+                upper = new RadixNumber([0], this.radix_);
+            } else {
+                lower = new RadixNumber(this.digits_.slice(0, n), this.radix_);
+                upper = new RadixNumber(this.digits_.slice(n), this.radix_);     
+            }
+           
+            return [lower, upper];
         },
 
         digitAt: function(index) {
