@@ -32,12 +32,20 @@
     function RadixNumber(n, radix) {
         this.radix_ = radix;
         
-        if (n instanceof Array) {
+        if (typeof n === "number") {
+            var digits = [];
+            do {
+                digits.push(n % radix);
+                n = (n / radix) >> 0;
+            } while (n > 0);
+            this.digits_ = digits;
+        } else if (n instanceof Array) {
             this.digits_ = n;
+            this.trim();
         } else if (typeof n === "string" || n instanceof String) {
             this.digits_ = parseStringWithRadix(n, radix);
         } else {
-            this.digits_ = [];
+            this.digits_ = [0];
         }
     }
 
@@ -91,15 +99,7 @@
                     digits[i + 1] -= 1;
                 }
             }
-            
-            i = digits.length;
-            
-            while (i > 0 && digits[i - 1] == 0) {
-                i--;
-            }
-            
-            digits = digits.slice(0, i);
-            
+                        
             return new RadixNumber(digits, this.radix_);
         },
         
@@ -115,6 +115,26 @@
             }
            
             return [lower, upper];
+        },
+        
+        shift: function(n) {
+            var digits = this.digits_.slice();
+            
+            for (var i = 0; i < n; i++) {
+                digits.unshift(0);
+            }
+            
+            return new RadixNumber(digits, this.radix_);
+        },
+        
+        trim: function() {
+            var i = this.digits_.length;
+            
+            while (i > 1 && this.digits_[i - 1] == 0) {
+                i--;
+            }
+            
+            this.digits_ = this.digits_.slice(0, i);
         },
 
         digitAt: function(index) {
